@@ -14,6 +14,7 @@ export default function SidebarItems({ open }: { open: boolean }) {
       {drawerItems.map((item, index) => (
         <ListItem key={index} disablePadding sx={{ display: "block" }}>
           <ListItemButton
+            href={item.href}
             sx={{
               minHeight: 48,
               justifyContent: open ? "initial" : "center",

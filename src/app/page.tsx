@@ -9,6 +9,7 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  CircularProgress,
   Grid,
   Link,
   Typography,
@@ -16,30 +17,37 @@ import {
 import { articles, newsCategories } from "@/data/constants";
 import { useEffect, useState } from "react";
 import { Article, NewsResponse } from "@/types/responses";
+import { encodeToBase64 } from "@/utils/stringUtils";
 
 export default function Home() {
   const [topHeadlines, setTopHeadlines] = useState<Article[]>(articles);
   const [currentCategory, setCurrentCategory] = useState("general");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchTopHeadlines() {
+      setIsLoading(true);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/top-headlines`
       );
       const data: NewsResponse = await response.json();
       setTopHeadlines(data.articles);
+      setIsLoading(false);
     }
     // fetchTopHeadlines();
   }, []);
 
   const changeTopHeadlines = async (category: string) => {
     if (category === currentCategory) return;
+    setIsLoading(true);
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/top-headlines?category=${category}`
     );
     const data: NewsResponse = await response.json();
     setTopHeadlines(data.articles);
     setCurrentCategory(category);
+    setIsLoading(false);
   };
 
   return (
@@ -84,79 +92,99 @@ export default function Home() {
             );
           })}
         </Grid>
-        {topHeadlines.map((article, index) =>
-          (index - 1) % 3 !== 0 ? (
-            <Grid key={index} item xs={3}>
-              <Card
-                style={{
-                  height: "100%",
-                }}
-              >
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
+        {isLoading ? (
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress className="mt-50" />
+          </Grid>
+        ) : (
+          <>
+            {topHeadlines.map((article, index) =>
+              (index - 1) % 3 !== 0 ? (
+                <Grid key={index} item xs={3}>
+                  <Card
+                    style={{
+                      height: "100%",
+                    }}
                   >
-                    Source: {article.source.name}
-                  </Typography>
-                  <Typography variant="h5" component="div">
-                    {article.title}
-                  </Typography>
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {new Date(article.publishedAt).toDateString()}
-                  </Typography>
-                  <Typography variant="body2">{article.description}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Button href={article.url} target="_blank" size="small">
-                    Learn More
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ) : (
-            <Grid key={index} item xs={6}>
-              <Card>
-                <CardMedia
-                  sx={{ height: 140 }}
-                  image={
-                    article.urlToImage
-                      ? article.urlToImage
-                      : newsPlaceholder.src
-                  }
-                  title="green iguana"
-                />
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {new Date(article.publishedAt).toDateString()}
-                  </Typography>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Source: {article.source.name}
-                  </Typography>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {article.title}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {article.description}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button href={article.url} target="_blank" size="small">
-                    Learn More
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          )
+                    <CardContent>
+                      <Typography
+                        sx={{ fontSize: 14 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Source: {article.source.name}
+                      </Typography>
+                      <Typography variant="h5" component="div">
+                        {article.title}
+                      </Typography>
+                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                        {new Date(article.publishedAt).toDateString()}
+                      </Typography>
+                      <Typography variant="body2">
+                        {article.description}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button href={`/news/${encodeToBase64(article.url)}`} target="_blank" size="small">
+                        Learn More
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ) : (
+                <Grid key={index} item xs={6}>
+                  <Card>
+                    <CardMedia
+                      sx={{ height: 140 }}
+                      image={
+                        article.urlToImage
+                          ? article.urlToImage
+                          : newsPlaceholder.src
+                      }
+                      title="green iguana"
+                    />
+                    <CardContent>
+                      <Typography
+                        sx={{ fontSize: 14 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        {new Date(article.publishedAt).toDateString()}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: 14 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Source: {article.source.name}
+                      </Typography>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {article.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {article.description}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      <Button
+                        href={`/news/${encodeToBase64(article.url)}`}
+                        target="_blank"
+                        size="small"
+                      >
+                        Learn More
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              )
+            )}
+          </>
         )}
       </Grid>
     </DrawerLayout>

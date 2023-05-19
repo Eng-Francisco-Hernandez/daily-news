@@ -79,6 +79,12 @@
   }
 }
 
+.mt {
+  &-50 {
+    margin-top: 50px;
+  }
+}
+
 .title-case {
   text-transform: capitalize;
 }

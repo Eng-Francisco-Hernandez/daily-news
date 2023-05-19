@@ -1,14 +1,10 @@
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import HomeIcon from "@mui/icons-material/Home";
 import { Article } from "@/types/responses";
 export const drawerItems = [
   {
-    title: "Inbox",
-    icon: <InboxIcon />,
-  },
-  {
-    title: "Mail",
-    icon: <MailIcon />,
+    title: "Home",
+    href: '/',
+    icon: <HomeIcon />,
   },
 ];
 
