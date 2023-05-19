@@ -8,8 +8,8 @@ export async function GET(req: Request) {
   try {
     const newsApiClient = new NewsApiClient();
     const newsResponse = await newsApiClient.getTopHeadlines(q, category);
-    return NextResponse.json({ data: newsResponse }, { status: 200 });
+    return NextResponse.json(newsResponse, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 400 });
+    return NextResponse.json(error, { status: 400 });
   }
 }

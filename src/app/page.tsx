@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import DrawerLayout from "@/components/layout/DrawerLayout";
+import newsPlaceholder from "../assets/images/news-placeholder.jpg";
 import {
   Button,
   Card,
@@ -18,6 +19,8 @@ import { Article, NewsResponse } from "@/types/responses";
 
 export default function Home() {
   const [topHeadlines, setTopHeadlines] = useState<Article[]>(articles);
+  const [currentCategory, setCurrentCategory] = useState("general");
+
   useEffect(() => {
     async function fetchTopHeadlines() {
       const response = await fetch(
@@ -29,6 +32,16 @@ export default function Home() {
     // fetchTopHeadlines();
   }, []);
 
+  const changeTopHeadlines = async (category: string) => {
+    if (category === currentCategory) return;
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/top-headlines?category=${category}`
+    );
+    const data: NewsResponse = await response.json();
+    setTopHeadlines(data.articles);
+    setCurrentCategory(category);
+  };
+
   return (
     <DrawerLayout>
       <Grid container spacing={3}>
@@ -39,7 +52,13 @@ export default function Home() {
           justifyContent="center"
           alignItems="center"
         >
-          <Typography variant="h2" component="h2" color="primary">
+          <Typography
+            variant="h2"
+            component="h2"
+            color="primary"
+            className="clickable"
+            onClick={() => changeTopHeadlines("general")}
+          >
             Daily news
           </Typography>
         </Grid>
@@ -54,8 +73,8 @@ export default function Home() {
             return (
               <Link
                 key={index}
-                href="#"
-                className="mr-10 title-case"
+                onClick={() => changeTopHeadlines(category)}
+                className="mr-10 title-case clickable"
                 style={{
                   textDecoration: "none",
                 }}
@@ -65,7 +84,7 @@ export default function Home() {
             );
           })}
         </Grid>
-        {articles.map((article, index) =>
+        {topHeadlines.map((article, index) =>
           (index - 1) % 3 !== 0 ? (
             <Grid key={index} item xs={3}>
               <Card
@@ -85,7 +104,7 @@ export default function Home() {
                     {article.title}
                   </Typography>
                   <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {article.publishedAt}
+                    {new Date(article.publishedAt).toDateString()}
                   </Typography>
                   <Typography variant="body2">{article.description}</Typography>
                 </CardContent>
@@ -101,10 +120,21 @@ export default function Home() {
               <Card>
                 <CardMedia
                   sx={{ height: 140 }}
-                  image={article.urlToImage}
+                  image={
+                    article.urlToImage
+                      ? article.urlToImage
+                      : newsPlaceholder.src
+                  }
                   title="green iguana"
                 />
                 <CardContent>
+                  <Typography
+                    sx={{ fontSize: 14 }}
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    {new Date(article.publishedAt).toDateString()}
+                  </Typography>
                   <Typography
                     sx={{ fontSize: 14 }}
                     color="text.secondary"
