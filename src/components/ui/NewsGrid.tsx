@@ -119,7 +119,6 @@ export default function NewsGrid() {
                           ? article.urlToImage
                           : newsPlaceholder.src
                       }
-                      title="green iguana"
                     />
                     <CardContent>
                       <Typography
