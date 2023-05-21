@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { usePathname } from "next/navigation";
 import DrawerLayout from "@/components/layout/DrawerLayout";
 import NewsProvider from "@/context/NewsProvider";
@@ -9,10 +9,12 @@ export default function index() {
   const pathname = usePathname();
 
   return (
-    <DrawerLayout>
-      <NewsProvider>
-        <ArticleDisplay articleUrl={pathname.split("/").pop()!}></ArticleDisplay>
-      </NewsProvider>
-    </DrawerLayout>
+    <NewsProvider>
+      <DrawerLayout hideCategories={true}>
+        <ArticleDisplay
+          articleUrl={pathname.split("/").pop()!}
+        ></ArticleDisplay>
+      </DrawerLayout>
+    </NewsProvider>
   );
 }

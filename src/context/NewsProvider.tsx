@@ -7,12 +7,14 @@ export type NewsContextType = {
   topHeadlines: Article[];
   isLoading: boolean;
   changeTopHeadlines: (category: string) => void;
+  currentCategory: string;
 };
 
-const NewsContext = React.createContext<NewsContextType>({
+export const NewsContext = React.createContext<NewsContextType>({
   topHeadlines: [],
   isLoading: false,
   changeTopHeadlines: () => {},
+  currentCategory: "",
 });
 
 export function useNews() {
@@ -44,7 +46,6 @@ export default function NewsProvider({
   const changeTopHeadlines = async (category: string) => {
     if (category === currentCategory) return;
     setIsLoading(true);
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/top-headlines?category=${category}`
     );
@@ -55,7 +56,7 @@ export default function NewsProvider({
   };
   return (
     <NewsContext.Provider
-      value={{ topHeadlines, isLoading, changeTopHeadlines }}
+      value={{ topHeadlines, isLoading, changeTopHeadlines, currentCategory }}
     >
       {children}
     </NewsContext.Provider>

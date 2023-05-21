@@ -6,10 +6,10 @@ import NewsProvider from "@/context/NewsProvider";
 
 export default function Home() {
   return (
-    <DrawerLayout>
-      <NewsProvider>
+    <NewsProvider>
+      <DrawerLayout>
         <NewsGrid />
-      </NewsProvider>
-    </DrawerLayout>
+      </DrawerLayout>
+    </NewsProvider>
   );
 }

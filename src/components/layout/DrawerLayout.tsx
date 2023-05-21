@@ -1,25 +1,18 @@
 "use client";
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import MuiDrawer from '@mui/material/Drawer';
-import SearchIcon from '@mui/icons-material/Search';
-import SidebarItems from './SidebarItems';
-import Toolbar from '@mui/material/Toolbar';
-import { alpha, InputBase } from '@mui/material';
-import {
-    CSSObject,
-    styled,
-    Theme,
-    useTheme
-    } from '@mui/material/styles';
-
+import * as React from "react";
+import Box from "@mui/material/Box";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiDrawer from "@mui/material/Drawer";
+import SidebarItems from "./SidebarItems";
+import Toolbar from "@mui/material/Toolbar";
+import { alpha, InputBase } from "@mui/material";
+import { CSSObject, styled, Theme, useTheme } from "@mui/material/styles";
 
 const drawerWidth = 240;
 
@@ -132,8 +125,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function DrawerLayout({
   children,
+  hideCategories = false,
 }: {
   children: React.ReactNode;
+  hideCategories?: boolean;
 }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -199,7 +194,7 @@ export default function DrawerLayout({
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <SidebarItems open={open} />
+        <SidebarItems open={open} hideCategories={hideCategories} />
         <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
