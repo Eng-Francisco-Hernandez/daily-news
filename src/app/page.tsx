@@ -1,11 +1,15 @@
 "use client";
+import React from "react";
+import DrawerLayout from "@/components/layout/DrawerLayout";
+import NewsGrid from "@/components/ui/NewsGrid";
+import NewsProvider from "@/context/NewsProvider";
 
-import * as React from "react";
-
-interface Props {
-
-}
-
-export default function Home(props: Props) {
-  return <></>
+export default function Home() {
+  return (
+    <NewsProvider>
+      <DrawerLayout>
+        <NewsGrid />
+      </DrawerLayout>
+    </NewsProvider>
+  );
 }
