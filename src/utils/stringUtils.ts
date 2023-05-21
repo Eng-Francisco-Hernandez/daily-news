@@ -1,7 +1,9 @@
 export function encodeToBase64(str: string) {
-  return Buffer.from(str).toString("base64");
+  const base64 = Buffer.from(str).toString("base64");
+  return base64.replace("/", "_");
 }
 
 export function decodeFromBase64(base64: string) {
-  return Buffer.from(base64, "base64").toString("utf-8");
+  const str = base64.replace("_", "/");
+  return Buffer.from(str, "base64").toString("utf-8");
 }

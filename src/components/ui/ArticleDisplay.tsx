@@ -1,41 +1,42 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Article } from "@/types/responses";
-import { decodeFromBase64 } from "@/utils/stringUtils";
-import { useNews } from "@/context/NewsProvider";
 import { Paper, Box, Grid, Typography, CircularProgress } from "@mui/material";
+import { useSearchParams } from "next/navigation";
+import { decodeFromBase64 } from "@/utils/stringUtils";
 
 export default function ArticleDisplay({ articleUrl }: { articleUrl: string }) {
-  const { topHeadlines } = useNews();
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const searchParams = useSearchParams();
+  const title = searchParams.get("title");
+  const date = searchParams.get("date");
+  const img = searchParams.get("img");
   const [articleContent, setArticleContent] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchArticle() {
       setIsLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/${articleUrl}`
-      );
-      const data = await response.json();
-      const paragraphs: string[] = [];
-      const sentences = data.articleContent.split(".");
-      for (let index = 0; index < sentences.length; index += 4) {
-        paragraphs.push(
-          [
-            sentences[index],
-            sentences[index + 1],
-            sentences[index + 2],
-            sentences[index + 3],
-            ".",
-          ].join(" ")
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/news/${articleUrl}`
         );
+        const data = await response.json();
+        const paragraphs: string[] = [];
+        const sentences = data.articleContent.split(".");
+        for (let index = 0; index < sentences.length; index += 4) {
+          paragraphs.push(
+            [
+              sentences[index],
+              sentences[index + 1],
+              sentences[index + 2],
+              sentences[index + 3],
+              ".",
+            ].join(" ")
+          );
+        }
+        setArticleContent(paragraphs);
+      } catch (error) {
+        setArticleContent([decodeFromBase64(articleUrl)]);
       }
-      setArticleContent(paragraphs);
-      const article = topHeadlines.find(
-        (el) => el.url === decodeFromBase64(articleUrl)
-      );
-      setSelectedArticle(article!);
       setIsLoading(false);
     }
     fetchArticle();
@@ -71,19 +72,12 @@ export default function ArticleDisplay({ articleUrl }: { articleUrl: string }) {
                 alignItems="center"
               >
                 <Typography variant="h5" component="h5" color="primary">
-                  {selectedArticle?.title}
+                  {title}
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Source: {selectedArticle?.source.name}
-                </Typography>
                 <Typography color="text.secondary">
-                  {new Date(selectedArticle?.publishedAt!).toDateString()}
+                  {new Date(date!).toDateString()}
                 </Typography>
               </Grid>
 
@@ -108,7 +102,7 @@ export default function ArticleDisplay({ articleUrl }: { articleUrl: string }) {
                       justifyContent="center"
                       alignItems="center"
                     >
-                      <img height={200} src={selectedArticle?.urlToImage}></img>
+                      <img height={200} src={decodeFromBase64(img!)}></img>
                     </Grid>
                   </React.Fragment>
                 )

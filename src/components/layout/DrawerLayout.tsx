@@ -174,7 +174,7 @@ export default function DrawerLayout({
           >
             <MenuIcon />
           </IconButton>
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -185,7 +185,7 @@ export default function DrawerLayout({
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={(e) => onEnter(e)}
             />
-          </Search>
+          </Search> */}
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { articles } from "@/data/constants";
 import { useEffect, useState } from "react";
 import { Article, NewsResponse } from "@/types/responses";
 
@@ -25,7 +24,7 @@ export default function NewsProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [topHeadlines, setTopHeadlines] = useState<Article[]>(articles);
+  const [topHeadlines, setTopHeadlines] = useState<Article[]>([]);
   const [currentCategory, setCurrentCategory] = useState("general");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +38,7 @@ export default function NewsProvider({
       setTopHeadlines(data.articles);
       setIsLoading(false);
     }
-    // fetchTopHeadlines();
+    fetchTopHeadlines();
   }, []);
 
   const changeTopHeadlines = async (category: string) => {
