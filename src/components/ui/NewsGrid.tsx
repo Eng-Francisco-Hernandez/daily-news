@@ -50,9 +50,10 @@ export default function NewsGrid() {
             <Link
               key={index}
               onClick={() => changeTopHeadlines(category)}
-              className="mr-10 title-case clickable"
+              className="title-case clickable"
               style={{
                 textDecoration: "none",
+                marginRight: "10px"
               }}
             >
               {category}
